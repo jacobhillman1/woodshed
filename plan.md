@@ -102,7 +102,7 @@ Tasks are ordered by dependency — each builds on the previous.
 - [x] 1.2 — Install dependencies: WaveSurfer.js, uuid (or use crypto.randomUUID)
 - [x] 1.3 — Set up folder structure: `components/`, `hooks/`, `state/`, `types/`
 - [x] 1.4 — Define TypeScript interfaces for `Song`, `Clip`, `PlaybackState`, `AppState`
-- [ ] 1.5 — Set up global state with `useReducer` and React Context
+- [x] 1.5 — Set up global state with `useReducer` and React Context
 
 ### Phase 2: Upload & Empty State
 - [ ] 2.1 — Build full-screen drag-and-drop upload zone (empty state)
