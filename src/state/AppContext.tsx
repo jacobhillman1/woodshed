@@ -1,10 +1,10 @@
-import { createContext, useContext, useReducer, ReactNode } from 'react'
+import { createContext, Dispatch, useContext, useReducer, ReactNode } from 'react'
 import { AppState } from '@/types'
 import { Action, initialState, reducer } from './reducer'
 
 interface AppContextValue {
   state: AppState
-  dispatch: React.Dispatch<Action>
+  dispatch: Dispatch<Action>
 }
 
 const AppContext = createContext<AppContextValue | null>(null)

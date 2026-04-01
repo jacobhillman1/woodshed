@@ -5,12 +5,12 @@ export type Action =
   | { type: 'UNLOAD_SONG' }
   | { type: 'ADD_CLIP'; payload: Clip }
   | { type: 'UPDATE_CLIP'; payload: { id: string; changes: Partial<Clip> } }
-  | { type: 'DELETE_CLIP'; payload: { id: string } }
+  | { type: 'DELETE_CLIP'; payload: string }
   | { type: 'PLAY_SONG' }
-  | { type: 'PLAY_CLIP'; payload: { id: string } }
+  | { type: 'PLAY_CLIP'; payload: string }
   | { type: 'PAUSE' }
   | { type: 'STOP' }
-  | { type: 'SET_CURRENT_TIME'; payload: { currentTime: number } }
+  | { type: 'SET_CURRENT_TIME'; payload: number }
 
 export const initialState: AppState = {
   song: null,
@@ -45,9 +45,9 @@ export function reducer(state: AppState, action: Action): AppState {
     case 'DELETE_CLIP':
       return {
         ...state,
-        clips: state.clips.filter((c) => c.id !== action.payload.id),
+        clips: state.clips.filter((c) => c.id !== action.payload),
         playback:
-          state.playback.activeClipId === action.payload.id
+          state.playback.activeClipId === action.payload
             ? { ...state.playback, status: 'idle', activeClipId: null }
             : state.playback,
       }
@@ -61,12 +61,7 @@ export function reducer(state: AppState, action: Action): AppState {
     case 'PLAY_CLIP':
       return {
         ...state,
-        playback: {
-          ...state.playback,
-          status: 'playing',
-          mode: 'clip',
-          activeClipId: action.payload.id,
-        },
+        playback: { ...state.playback, status: 'playing', mode: 'clip', activeClipId: action.payload },
       }
 
     case 'PAUSE':
@@ -79,10 +74,7 @@ export function reducer(state: AppState, action: Action): AppState {
       }
 
     case 'SET_CURRENT_TIME':
-      return {
-        ...state,
-        playback: { ...state.playback, currentTime: action.payload.currentTime },
-      }
+      return { ...state, playback: { ...state.playback, currentTime: action.payload } }
 
     default:
       return state
