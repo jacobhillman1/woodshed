@@ -109,7 +109,7 @@ Tasks are ordered by dependency — each builds on the previous.
 - [x] 2.2 — Handle file input (drag-and-drop + click-to-browse)
 - [x] 2.3 — Decode uploaded MP3 into `AudioBuffer` via Web Audio API
 - [x] 2.4 — Generate object URL and populate `Song` in app state
-- [ ] 2.5 — Transition from empty state to main app layout on successful upload
+- [x] 2.5 — Transition from empty state to main app layout on successful upload
 
 ### Phase 3: Waveform
 - [ ] 3.1 — Integrate WaveSurfer.js and render waveform from loaded song
