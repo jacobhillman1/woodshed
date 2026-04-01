@@ -106,7 +106,7 @@ Tasks are ordered by dependency — each builds on the previous.
 
 ### Phase 2: Upload & Empty State
 - [x] 2.1 — Build full-screen drag-and-drop upload zone (empty state)
-- [ ] 2.2 — Handle file input (drag-and-drop + click-to-browse)
+- [x] 2.2 — Handle file input (drag-and-drop + click-to-browse)
 - [ ] 2.3 — Decode uploaded MP3 into `AudioBuffer` via Web Audio API
 - [ ] 2.4 — Generate object URL and populate `Song` in app state
 - [ ] 2.5 — Transition from empty state to main app layout on successful upload
