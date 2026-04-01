@@ -100,7 +100,7 @@ Tasks are ordered by dependency — each builds on the previous.
 ### Phase 1: Project Setup
 - [x] 1.1 — Scaffold Vite + React + TypeScript project
 - [x] 1.2 — Install dependencies: WaveSurfer.js, uuid (or use crypto.randomUUID)
-- [ ] 1.3 — Set up folder structure: `components/`, `hooks/`, `state/`, `types/`
+- [x] 1.3 — Set up folder structure: `components/`, `hooks/`, `state/`, `types/`
 - [ ] 1.4 — Define TypeScript interfaces for `Song`, `Clip`, `PlaybackState`, `AppState`
 - [ ] 1.5 — Set up global state with `useReducer` and React Context
 
