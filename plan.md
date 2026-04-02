@@ -119,11 +119,11 @@ Tasks are ordered by dependency — each builds on the previous.
 - [x] 3.5 — Render colored highlight overlays on waveform for each clip
 
 ### Phase 4: Clip Cards
-- [ ] 4.1 — Build `ClipCard` component with all fields (name, times, controls)
+- [x] 4.1 — Build `ClipCard` component with all fields (name, times, controls)
 - [ ] 4.2 — Render clips panel (scrollable list of ClipCards)
-- [ ] 4.3 — Editable clip name (inline text input)
-- [ ] 4.4 — Start/end time display with nudge buttons (±0.05s increments)
-- [ ] 4.5 — Delete clip button
+- [x] 4.3 — Editable clip name (inline text input)
+- [x] 4.4 — Start/end time display with nudge buttons (±0.05s increments)
+- [x] 4.5 — Delete clip button
 - [ ] 4.6 — Empty state inside clips panel ("Drag on the waveform to create a clip")
 
 ### Phase 5: Playback Engine
