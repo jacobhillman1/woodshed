@@ -141,8 +141,8 @@ Tasks are ordered by dependency — each builds on the previous.
 - [x] 6.4 — 1–9: select clip by number
 
 ### Phase 7: Polish
-- [ ] 7.1 — Apply dark theme and accent color throughout
+- [x] 7.1 — Apply dark theme and accent color throughout
 - [ ] 7.2 — Responsive layout (clips panel + waveform at bottom)
-- [ ] 7.3 — Hover states, transitions, focus styles
+- [x] 7.3 — Hover states, transitions, focus styles
 - [ ] 7.4 — Error handling (unsupported file type, decode failure)
 - [ ] 7.5 — Final QA pass against PRD checklist

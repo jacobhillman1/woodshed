@@ -1,1 +1,13 @@
 @import "tailwindcss";
+
+html,
+body {
+  background-color: #09090b; /* zinc-950 — prevents white flash on load */
+  overflow: hidden;
+  height: 100%;
+}
+
+button:focus-visible {
+  outline: 2px solid rgba(249, 115, 22, 0.6);
+  outline-offset: 2px;
+}

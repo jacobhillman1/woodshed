@@ -31,7 +31,7 @@ export function ClipCard({ clip, index, isActive, isPlaying, dispatch, onPlay }:
         type="text"
         value={clip.name}
         onChange={(e) => update({ name: e.target.value })}
-        className="bg-transparent text-white text-sm outline-none w-24 flex-shrink-0 min-w-0"
+        className="bg-transparent text-white text-sm outline-none w-24 flex-shrink-0 min-w-0 border-b border-transparent focus:border-white/30 transition-colors"
       />
 
       <div className="flex items-center gap-1 flex-shrink-0">
