@@ -1,15 +1,21 @@
+import { useRef } from 'react'
+import WaveSurfer from 'wavesurfer.js'
 import { useAppState } from './state/AppContext'
 import { useFileUpload } from './hooks/useFileUpload'
 import { useAudioLoader } from './hooks/useAudioLoader'
+import { usePlayback } from './hooks/usePlayback'
 import { EmptyState } from './components/EmptyState'
 import { TopBar } from './components/TopBar'
 import { Waveform } from './components/Waveform'
 import { ClipsPanel } from './components/ClipsPanel'
+import { Transport } from './components/Transport'
 
 export default function App() {
   const { state, dispatch } = useAppState()
+  const wsRef = useRef<WaveSurfer | null>(null)
   const loadAudio = useAudioLoader(dispatch)
   const { isDragging, handleFile } = useFileUpload(loadAudio)
+  const { toggleSong, toggleClip } = usePlayback(wsRef, state, dispatch)
 
   if (!state.song) {
     return (
@@ -19,17 +25,34 @@ export default function App() {
     )
   }
 
+  const { song, clips, playback } = state
+  const activeClip = clips.find(c => c.id === playback.activeClipId)
+  const nowPlayingLabel = activeClip ? activeClip.name : song.name
+
   return (
     <div className="h-screen bg-zinc-950 text-white flex flex-col">
-      <TopBar songName={state.song.name} onFile={handleFile} />
+      <TopBar songName={song.name} onFile={handleFile} />
       <ClipsPanel
-        clips={state.clips}
-        activeClipId={state.playback.activeClipId}
-        playingClipId={state.playback.status === 'playing' ? state.playback.activeClipId : null}
+        clips={clips}
+        activeClipId={playback.activeClipId}
+        playingClipId={playback.status === 'playing' ? playback.activeClipId : null}
         dispatch={dispatch}
-        onPlayClip={(id) => dispatch({ type: 'PLAY_CLIP', payload: id })}
+        onPlayClip={toggleClip}
       />
-      <Waveform song={state.song} clips={state.clips} dispatch={dispatch} />
+      <Waveform
+        song={song}
+        clips={clips}
+        playback={playback}
+        dispatch={dispatch}
+        wsRef={wsRef}
+      />
+      <Transport
+        isPlaying={playback.status === 'playing'}
+        currentTime={playback.currentTime}
+        duration={song.duration}
+        label={nowPlayingLabel}
+        onPlayPause={toggleSong}
+      />
     </div>
   )
 }

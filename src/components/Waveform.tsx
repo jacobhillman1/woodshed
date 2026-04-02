@@ -1,8 +1,7 @@
-import { useEffect, useRef } from 'react'
-import { Dispatch } from 'react'
+import { useEffect, useRef, Dispatch } from 'react'
 import WaveSurfer from 'wavesurfer.js'
 import RegionsPlugin from 'wavesurfer.js/dist/plugins/regions.js'
-import { Song, Clip } from '@/types'
+import { Song, Clip, PlaybackState } from '@/types'
 import { Action } from '@/state/reducer'
 
 const CLIP_COLORS = [
@@ -16,17 +15,20 @@ const CLIP_COLORS = [
 interface Props {
   song: Song
   clips: Clip[]
+  playback: PlaybackState
   dispatch: Dispatch<Action>
+  wsRef: React.MutableRefObject<WaveSurfer | null>
 }
 
-export function Waveform({ song, clips, dispatch }: Props) {
+export function Waveform({ song, clips, playback, dispatch, wsRef }: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const wsRef = useRef<WaveSurfer | null>(null)
   const regionsRef = useRef<RegionsPlugin | null>(null)
   const clipsRef = useRef(clips)
+  const playbackRef = useRef(playback)
   const addingRef = useRef(false)
 
   useEffect(() => { clipsRef.current = clips }, [clips])
+  useEffect(() => { playbackRef.current = playback }, [playback])
 
   useEffect(() => {
     if (!containerRef.current) return
@@ -47,6 +49,18 @@ export function Waveform({ song, clips, dispatch }: Props) {
 
     ws.on('timeupdate', (currentTime) => {
       dispatch({ type: 'SET_CURRENT_TIME', payload: currentTime })
+    })
+
+    ws.on('finish', () => {
+      const pb = playbackRef.current
+      if (pb.mode === 'clip' && pb.activeClipId) {
+        const clip = clipsRef.current.find(c => c.id === pb.activeClipId)
+        if (clip?.isLooping) {
+          ws.play(clip.startTime, clip.endTime)
+          return
+        }
+      }
+      dispatch({ type: 'STOP' })
     })
 
     regions.enableDragSelection({ color: 'rgba(251, 146, 60, 0.25)' })
@@ -73,9 +87,8 @@ export function Waveform({ song, clips, dispatch }: Props) {
       wsRef.current = null
       regionsRef.current = null
     }
-  }, [song.objectUrl, dispatch])
+  }, [song.objectUrl, dispatch, wsRef])
 
-  // Sync clips to regions
   useEffect(() => {
     const regions = regionsRef.current
     if (!regions) return

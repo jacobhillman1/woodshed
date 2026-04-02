@@ -127,12 +127,12 @@ Tasks are ordered by dependency — each builds on the previous.
 - [x] 4.6 — Empty state inside clips panel ("Drag on the waveform to create a clip")
 
 ### Phase 5: Playback Engine
-- [ ] 5.1 — Full song play/pause via WaveSurfer
-- [ ] 5.2 — Clip play/pause (seek to start, play to end, stop or loop)
-- [ ] 5.3 — Loop toggle per clip
-- [ ] 5.4 — Speed control per clip (0.25x–1.0x, pitch-preserved via Web Audio API)
-- [ ] 5.5 — Transport bar: current time, total duration, now-playing label
-- [ ] 5.6 — Visual active state on clip card when that clip is playing
+- [x] 5.1 — Full song play/pause via WaveSurfer
+- [x] 5.2 — Clip play/pause (seek to start, play to end, stop or loop)
+- [x] 5.3 — Loop toggle per clip
+- [x] 5.4 — Speed control per clip (0.25x–1.0x, pitch-preserved via Web Audio API)
+- [x] 5.5 — Transport bar: current time, total duration, now-playing label
+- [x] 5.6 — Visual active state on clip card when that clip is playing
 
 ### Phase 6: Keyboard Shortcuts
 - [ ] 6.1 — Space: play/pause active context (song or selected clip)

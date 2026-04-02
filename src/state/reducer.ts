@@ -26,7 +26,7 @@ export const initialState: AppState = {
 export function reducer(state: AppState, action: Action): AppState {
   switch (action.type) {
     case 'LOAD_SONG':
-      return { ...state, song: action.payload, clips: [] }
+      return { ...initialState, song: action.payload }
 
     case 'UNLOAD_SONG':
       return { ...initialState }
