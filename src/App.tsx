@@ -4,6 +4,7 @@ import { useAudioLoader } from './hooks/useAudioLoader'
 import { EmptyState } from './components/EmptyState'
 import { TopBar } from './components/TopBar'
 import { Waveform } from './components/Waveform'
+import { ClipsPanel } from './components/ClipsPanel'
 
 export default function App() {
   const { state, dispatch } = useAppState()
@@ -21,9 +22,13 @@ export default function App() {
   return (
     <div className="h-screen bg-zinc-950 text-white flex flex-col">
       <TopBar songName={state.song.name} onFile={handleFile} />
-      <div className="flex-1 flex items-center justify-center overflow-hidden">
-        <p className="text-white/20 text-sm">Clips panel — Phase 4</p>
-      </div>
+      <ClipsPanel
+        clips={state.clips}
+        activeClipId={state.playback.activeClipId}
+        playingClipId={state.playback.status === 'playing' ? state.playback.activeClipId : null}
+        dispatch={dispatch}
+        onPlayClip={(id) => dispatch({ type: 'PLAY_CLIP', payload: id })}
+      />
       <Waveform song={state.song} clips={state.clips} dispatch={dispatch} />
     </div>
   )

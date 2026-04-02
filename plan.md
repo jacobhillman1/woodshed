@@ -120,11 +120,11 @@ Tasks are ordered by dependency — each builds on the previous.
 
 ### Phase 4: Clip Cards
 - [x] 4.1 — Build `ClipCard` component with all fields (name, times, controls)
-- [ ] 4.2 — Render clips panel (scrollable list of ClipCards)
+- [x] 4.2 — Render clips panel (scrollable list of ClipCards)
 - [x] 4.3 — Editable clip name (inline text input)
 - [x] 4.4 — Start/end time display with nudge buttons (±0.05s increments)
 - [x] 4.5 — Delete clip button
-- [ ] 4.6 — Empty state inside clips panel ("Drag on the waveform to create a clip")
+- [x] 4.6 — Empty state inside clips panel ("Drag on the waveform to create a clip")
 
 ### Phase 5: Playback Engine
 - [ ] 5.1 — Full song play/pause via WaveSurfer
