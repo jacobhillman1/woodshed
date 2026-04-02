@@ -24,6 +24,11 @@ export default function App() {
     return () => clearTimeout(t)
   }, [error])
 
+  useEffect(() => {
+    const url = state.song?.objectUrl
+    return () => { if (url) URL.revokeObjectURL(url) }
+  }, [state.song?.objectUrl])
+
   const loadAudio = useAudioLoader(dispatch, onError)
   const { isDragging, handleFile } = useFileUpload(loadAudio, onError)
   const { toggleSong, toggleClip } = usePlayback(wsRef, state, dispatch)
@@ -50,6 +55,7 @@ export default function App() {
             clips={clips}
             activeClipId={playback.activeClipId}
             playingClipId={playback.status === 'playing' ? playback.activeClipId : null}
+            duration={song.duration}
             dispatch={dispatch}
             onPlayClip={toggleClip}
           />

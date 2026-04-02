@@ -8,6 +8,7 @@ interface Props {
   index: number
   isActive: boolean
   isPlaying: boolean
+  duration: number
   dispatch: Dispatch<Action>
   onPlay: () => void
 }
@@ -17,7 +18,7 @@ const fmt = (s: number) => {
   return `${m}:${(s % 60).toFixed(2).padStart(5, '0')}`
 }
 
-export function ClipCard({ clip, index, isActive, isPlaying, dispatch, onPlay }: Props) {
+export function ClipCard({ clip, index, isActive, isPlaying, duration, dispatch, onPlay }: Props) {
   const update = (changes: Partial<Clip>) =>
     dispatch({ type: 'UPDATE_CLIP', payload: { id: clip.id, changes } })
 
@@ -58,7 +59,7 @@ export function ClipCard({ clip, index, isActive, isPlaying, dispatch, onPlay }:
         <span className="font-mono text-sm text-white bg-white/5 rounded px-2 py-0.5 w-[4.5rem] text-center">
           {fmt(clip.endTime)}
         </span>
-        <button onClick={() => update({ endTime: +(clip.endTime + 0.05).toFixed(2) })}
+        <button onClick={() => update({ endTime: Math.min(duration, +(clip.endTime + 0.05).toFixed(2)) })}
           className="text-white/30 hover:text-white/70 p-0.5">
           <ChevronRight className="w-3 h-3" />
         </button>

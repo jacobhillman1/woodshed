@@ -145,4 +145,4 @@ Tasks are ordered by dependency — each builds on the previous.
 - [x] 7.2 — Responsive layout (clips panel + waveform at bottom)
 - [x] 7.3 — Hover states, transitions, focus styles
 - [x] 7.4 — Error handling (unsupported file type, decode failure)
-- [ ] 7.5 — Final QA pass against PRD checklist
+- [x] 7.5 — Final QA pass against PRD checklist

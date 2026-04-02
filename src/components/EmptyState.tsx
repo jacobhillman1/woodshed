@@ -21,6 +21,7 @@ export function EmptyState({ isDragging, onFile }: Props) {
         type="file"
         accept="audio/mpeg"
         className="hidden"
+        onClick={(e) => { e.currentTarget.value = '' }}
         onChange={(e) => {
           const file = e.target.files?.[0]
           if (file) onFile(file)
