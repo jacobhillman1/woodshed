@@ -144,5 +144,5 @@ Tasks are ordered by dependency — each builds on the previous.
 - [x] 7.1 — Apply dark theme and accent color throughout
 - [x] 7.2 — Responsive layout (clips panel + waveform at bottom)
 - [x] 7.3 — Hover states, transitions, focus styles
-- [ ] 7.4 — Error handling (unsupported file type, decode failure)
+- [x] 7.4 — Error handling (unsupported file type, decode failure)
 - [ ] 7.5 — Final QA pass against PRD checklist

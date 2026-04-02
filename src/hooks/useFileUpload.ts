@@ -1,11 +1,15 @@
 import { useState, useEffect, useCallback } from 'react'
 
-export function useFileUpload(onFile: (file: File) => void) {
+export function useFileUpload(onFile: (file: File) => void, onError: (msg: string) => void) {
   const [isDragging, setIsDragging] = useState(false)
 
   const handleFile = useCallback((file: File) => {
-    if (file.type === 'audio/mpeg') onFile(file)
-  }, [onFile])
+    if (file.type === 'audio/mpeg') {
+      onFile(file)
+    } else {
+      onError('Only MP3 files are supported.')
+    }
+  }, [onFile, onError])
 
   useEffect(() => {
     let dragCounter = 0

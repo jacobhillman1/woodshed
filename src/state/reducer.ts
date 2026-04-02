@@ -32,6 +32,7 @@ export function reducer(state: AppState, action: Action): AppState {
       return { ...initialState }
 
     case 'ADD_CLIP':
+      if (state.clips.length >= 20) return state
       return { ...state, clips: [...state.clips, action.payload] }
 
     case 'UPDATE_CLIP':
