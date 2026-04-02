@@ -112,11 +112,11 @@ Tasks are ordered by dependency — each builds on the previous.
 - [x] 2.5 — Transition from empty state to main app layout on successful upload
 
 ### Phase 3: Waveform
-- [ ] 3.1 — Integrate WaveSurfer.js and render waveform from loaded song
-- [ ] 3.2 — Display playhead that tracks current time
-- [ ] 3.3 — Enable click-to-seek on waveform
-- [ ] 3.4 — Enable click-and-drag to define a region → creates a new Clip
-- [ ] 3.5 — Render colored highlight overlays on waveform for each clip
+- [x] 3.1 — Integrate WaveSurfer.js and render waveform from loaded song
+- [x] 3.2 — Display playhead that tracks current time
+- [x] 3.3 — Enable click-to-seek on waveform
+- [x] 3.4 — Enable click-and-drag to define a region → creates a new Clip
+- [x] 3.5 — Render colored highlight overlays on waveform for each clip
 
 ### Phase 4: Clip Cards
 - [ ] 4.1 — Build `ClipCard` component with all fields (name, times, controls)
