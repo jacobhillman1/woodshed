@@ -135,10 +135,10 @@ Tasks are ordered by dependency — each builds on the previous.
 - [x] 5.6 — Visual active state on clip card when that clip is playing
 
 ### Phase 6: Keyboard Shortcuts
-- [ ] 6.1 — Space: play/pause active context (song or selected clip)
-- [ ] 6.2 — L: toggle loop on active clip
-- [ ] 6.3 — `[` / `]`: decrease/increase speed by 0.05x
-- [ ] 6.4 — 1–9: select clip by number
+- [x] 6.1 — Space: play/pause active context (song or selected clip)
+- [x] 6.2 — L: toggle loop on active clip
+- [x] 6.3 — `[` / `]`: decrease/increase speed by 0.05x
+- [x] 6.4 — 1–9: select clip by number
 
 ### Phase 7: Polish
 - [ ] 7.1 — Apply dark theme and accent color throughout

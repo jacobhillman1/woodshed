@@ -4,6 +4,7 @@ import { useAppState } from './state/AppContext'
 import { useFileUpload } from './hooks/useFileUpload'
 import { useAudioLoader } from './hooks/useAudioLoader'
 import { usePlayback } from './hooks/usePlayback'
+import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
 import { EmptyState } from './components/EmptyState'
 import { TopBar } from './components/TopBar'
 import { Waveform } from './components/Waveform'
@@ -16,6 +17,7 @@ export default function App() {
   const loadAudio = useAudioLoader(dispatch)
   const { isDragging, handleFile } = useFileUpload(loadAudio)
   const { toggleSong, toggleClip } = usePlayback(wsRef, state, dispatch)
+  useKeyboardShortcuts({ state, dispatch, toggleSong, toggleClip })
 
   if (!state.song) {
     return (
