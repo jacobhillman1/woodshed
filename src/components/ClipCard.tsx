@@ -141,7 +141,7 @@ export function ClipCard({ clip, index, isActive, isPlaying, duration, audioBuff
                   min={0} max={3} step={1}
                   value={speedIndex}
                   onChange={(e) => update({ speed: SPEEDS[+e.target.value] })}
-                  className="w-full cursor-pointer"
+                  className="w-full cursor-pointer accent-zinc-500"
                 />
                 <div className="flex justify-between">
                   {SPEED_LABELS.map((label, i) => (
