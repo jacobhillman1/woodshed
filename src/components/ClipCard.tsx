@@ -14,6 +14,7 @@ interface Props {
   currentTime: number
   dispatch: Dispatch<Action>
   onPlay: () => void
+  onSelect: () => void
 }
 
 const fmt = (s: number) => {
@@ -21,13 +22,18 @@ const fmt = (s: number) => {
   return `${m}:${(s % 60).toFixed(2).padStart(5, '0')}`
 }
 
-export function ClipCard({ clip, index, isActive, isPlaying, duration, audioBuffer, currentTime, dispatch, onPlay }: Props) {
+export function ClipCard({ clip, index, isActive, isPlaying, duration, audioBuffer, currentTime, dispatch, onPlay, onSelect }: Props) {
   const update = (changes: Partial<Clip>) =>
     dispatch({ type: 'UPDATE_CLIP', payload: { id: clip.id, changes } })
 
   return (
-    <div className={`bg-white/5 rounded-lg p-3 flex flex-col gap-2 transition-all
-      ${isActive ? 'ring-2 ring-orange-500 shadow-lg shadow-orange-500/20' : 'hover:bg-white/[0.07]'}`}
+    <div
+      className={`bg-white/5 rounded-lg p-3 flex flex-col gap-2 transition-all cursor-pointer
+        ${isActive ? 'ring-2 ring-orange-500 shadow-lg shadow-orange-500/20' : 'hover:bg-white/[0.07]'}`}
+      onClick={(e) => {
+        // Only select when clicking the card background, not interactive controls
+        if (!(e.target as HTMLElement).closest('button, input')) onSelect()
+      }}
     >
       {/* Controls row */}
       <div className="flex items-center gap-3">
@@ -109,7 +115,7 @@ export function ClipCard({ clip, index, isActive, isPlaying, duration, audioBuff
         startTime={clip.startTime}
         endTime={clip.endTime}
         currentTime={currentTime}
-        isActive={isActive}
+        isPlaying={isPlaying}
       />
     </div>
   )

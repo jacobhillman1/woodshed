@@ -6,6 +6,7 @@ export type Action =
   | { type: 'ADD_CLIP'; payload: Clip }
   | { type: 'UPDATE_CLIP'; payload: { id: string; changes: Partial<Clip> } }
   | { type: 'DELETE_CLIP'; payload: string }
+  | { type: 'SELECT_CLIP'; payload: string }
   | { type: 'PLAY_SONG' }
   | { type: 'PLAY_CLIP'; payload: string }
   | { type: 'PAUSE' }
@@ -51,6 +52,12 @@ export function reducer(state: AppState, action: Action): AppState {
           state.playback.activeClipId === action.payload
             ? { ...state.playback, status: 'idle', activeClipId: null }
             : state.playback,
+      }
+
+    case 'SELECT_CLIP':
+      return {
+        ...state,
+        playback: { ...state.playback, status: 'idle', mode: 'clip', activeClipId: action.payload },
       }
 
     case 'PLAY_SONG':

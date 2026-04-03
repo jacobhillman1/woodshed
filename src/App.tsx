@@ -32,6 +32,11 @@ export default function App() {
   const loadAudio = useAudioLoader(dispatch, onError)
   const { isDragging, handleFile } = useFileUpload(loadAudio, onError)
   const { toggleSong, toggleClip } = usePlayback(wsRef, state, dispatch)
+
+  const selectClip = useCallback((clipId: string) => {
+    wsRef.current?.pause()
+    dispatch({ type: 'SELECT_CLIP', payload: clipId })
+  }, [wsRef, dispatch])
   useKeyboardShortcuts({ state, dispatch, toggleSong, toggleClip })
 
   const { song, clips, playback } = state
@@ -60,6 +65,7 @@ export default function App() {
             currentTime={playback.currentTime}
             dispatch={dispatch}
             onPlayClip={toggleClip}
+            onSelectClip={selectClip}
           />
           <Waveform
             song={song}

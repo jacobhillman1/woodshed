@@ -123,7 +123,10 @@ export function Waveform({ song, clips, playback, dispatch, wsRef }: Props) {
     if (!regions) return
     addingRef.current = true
     regions.clearRegions()
-    clips.forEach((clip, i) => {
+    // When a clip is selected, show only its region; otherwise show all
+    const activeId = playback.activeClipId
+    const visible = activeId ? clips.filter(c => c.id === activeId) : clips
+    visible.forEach((clip, i) => {
       regions.addRegion({
         id: `clip-${clip.id}`,
         start: clip.startTime,
@@ -134,7 +137,7 @@ export function Waveform({ song, clips, playback, dispatch, wsRef }: Props) {
       })
     })
     addingRef.current = false
-  }, [clips])
+  }, [clips, playback.activeClipId])
 
   return (
     <div className="border-t border-white/10 flex-shrink-0">
