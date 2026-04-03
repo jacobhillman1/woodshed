@@ -1,5 +1,8 @@
 import { Dispatch, useState } from 'react'
 import { ChevronLeft, ChevronRight, Play, Pause, RotateCw, Trash2 } from 'lucide-react'
+
+const SPEEDS = [0.25, 0.5, 0.75, 1.0]
+const SPEED_LABELS = ['0.25x', '0.5x', '0.75x', '1x']
 import { Clip } from '@/types'
 import { Action } from '@/state/reducer'
 import { ClipWaveform } from './ClipWaveform'
@@ -129,18 +132,19 @@ export function ClipCard({ clip, index, isActive, isPlaying, duration, audioBuff
             <RotateCw className="w-3.5 h-3.5" />
           </button>
 
-          <div className="flex items-center gap-1 bg-white/5 rounded-md px-1.5 py-0.5">
-            <button onClick={() => update({ speed: Math.max(0.25, +(clip.speed - 0.05).toFixed(2)) })}
-              disabled={clip.speed <= 0.25}
-              className="text-white/30 hover:text-white/70 disabled:opacity-30 disabled:cursor-not-allowed">
-              <ChevronLeft className="w-3 h-3" />
-            </button>
-            <span className="text-sm text-white w-10 text-center">{clip.speed.toFixed(2)}x</span>
-            <button onClick={() => update({ speed: Math.min(1.0, +(clip.speed + 0.05).toFixed(2)) })}
-              disabled={clip.speed >= 1.0}
-              className="text-white/30 hover:text-white/70 disabled:opacity-30 disabled:cursor-not-allowed">
-              <ChevronRight className="w-3 h-3" />
-            </button>
+          <div className="flex items-center gap-1.5 bg-white/5 rounded-md px-2 py-1">
+            <input
+              type="range"
+              min={0}
+              max={3}
+              step={1}
+              value={Math.max(0, Math.min(3, Math.round((clip.speed - 0.25) / 0.25)))}
+              onChange={(e) => update({ speed: SPEEDS[+e.target.value] })}
+              className="w-16 accent-orange-500 cursor-pointer"
+            />
+            <span className="text-xs text-white/60 w-7 text-right flex-shrink-0">
+              {SPEED_LABELS[Math.max(0, Math.min(3, Math.round((clip.speed - 0.25) / 0.25)))]}
+            </span>
           </div>
 
           <button onClick={() => dispatch({ type: 'DELETE_CLIP', payload: clip.id })}

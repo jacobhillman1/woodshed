@@ -37,6 +37,11 @@ export default function App() {
     wsRef.current?.pause()
     dispatch({ type: 'SELECT_CLIP', payload: clipId })
   }, [wsRef, dispatch])
+
+  const deselectClip = useCallback(() => {
+    wsRef.current?.pause()
+    dispatch({ type: 'DESELECT_CLIP' })
+  }, [wsRef, dispatch])
   useKeyboardShortcuts({ state, dispatch, toggleSong, toggleClip })
 
   const { song, clips, playback } = state
@@ -66,6 +71,7 @@ export default function App() {
             dispatch={dispatch}
             onPlayClip={toggleClip}
             onSelectClip={selectClip}
+            onDeselectClip={deselectClip}
           />
           <Waveform
             song={song}

@@ -13,9 +13,10 @@ interface Props {
   dispatch: Dispatch<Action>
   onPlayClip: (id: string) => void
   onSelectClip: (id: string) => void
+  onDeselectClip: () => void
 }
 
-export function ClipsPanel({ clips, activeClipId, playingClipId, duration, audioBuffer, currentTime, dispatch, onPlayClip, onSelectClip }: Props) {
+export function ClipsPanel({ clips, activeClipId, playingClipId, duration, audioBuffer, currentTime, dispatch, onPlayClip, onSelectClip, onDeselectClip }: Props) {
   if (clips.length === 0) {
     return (
       <div className="flex-1 flex items-center justify-center">
@@ -25,7 +26,10 @@ export function ClipsPanel({ clips, activeClipId, playingClipId, duration, audio
   }
 
   return (
-    <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-2 min-w-0">
+    <div
+      className="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-2 min-w-0"
+      onClick={(e) => { if (e.target === e.currentTarget) onDeselectClip() }}
+    >
       {clips.map((clip, i) => (
         <ClipCard
           key={clip.id}
