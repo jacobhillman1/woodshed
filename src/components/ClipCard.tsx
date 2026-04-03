@@ -1,4 +1,4 @@
-import { Dispatch } from 'react'
+import { Dispatch, useState } from 'react'
 import { ChevronLeft, ChevronRight, Play, Pause, RotateCw, Trash2 } from 'lucide-react'
 import { Clip } from '@/types'
 import { Action } from '@/state/reducer'
@@ -22,9 +22,32 @@ const fmt = (s: number) => {
   return `${m}:${(s % 60).toFixed(2).padStart(5, '0')}`
 }
 
+// Parse "m:ss", "m:ss.ff", or plain seconds. Returns null on invalid input.
+const parseTime = (raw: string): number | null => {
+  const colon = raw.match(/^(\d+):(\d+(?:\.\d+)?)$/)
+  if (colon) return parseInt(colon[1]) * 60 + parseFloat(colon[2])
+  const plain = raw.match(/^\d+(?:\.\d+)?$/)
+  if (plain) return parseFloat(raw)
+  return null
+}
+
 export function ClipCard({ clip, index, isActive, isPlaying, duration, audioBuffer, currentTime, dispatch, onPlay, onSelect }: Props) {
   const update = (changes: Partial<Clip>) =>
     dispatch({ type: 'UPDATE_CLIP', payload: { id: clip.id, changes } })
+
+  const [editStart, setEditStart] = useState<string | null>(null)
+  const [editEnd, setEditEnd] = useState<string | null>(null)
+
+  const commitStart = (raw: string) => {
+    const t = parseTime(raw)
+    if (t !== null) update({ startTime: +Math.max(0, Math.min(t, clip.endTime - 0.05)).toFixed(2) })
+    setEditStart(null)
+  }
+  const commitEnd = (raw: string) => {
+    const t = parseTime(raw)
+    if (t !== null) update({ endTime: +Math.min(duration, Math.max(t, clip.startTime + 0.05)).toFixed(2) })
+    setEditEnd(null)
+  }
 
   return (
     <div
@@ -51,9 +74,18 @@ export function ClipCard({ clip, index, isActive, isPlaying, duration, audioBuff
             className="text-white/30 hover:text-white/70 p-0.5">
             <ChevronLeft className="w-3 h-3" />
           </button>
-          <span className="font-mono text-sm text-white bg-white/5 rounded px-2 py-0.5 w-[4.5rem] text-center">
-            {fmt(clip.startTime)}
-          </span>
+          <input
+            type="text"
+            value={editStart ?? fmt(clip.startTime)}
+            onFocus={(e) => { setEditStart(fmt(clip.startTime)); e.target.select() }}
+            onChange={(e) => setEditStart(e.target.value)}
+            onBlur={(e) => commitStart(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') e.currentTarget.blur()
+              if (e.key === 'Escape') { setEditStart(null); e.currentTarget.blur() }
+            }}
+            className="font-mono text-sm text-white bg-white/5 rounded px-2 py-0.5 w-[4.5rem] text-center outline-none focus:ring-1 focus:ring-orange-500/50 transition-shadow"
+          />
           <button onClick={() => update({ startTime: Math.min(+(clip.startTime + 0.05).toFixed(2), clip.endTime - 0.05) })}
             className="text-white/30 hover:text-white/70 p-0.5">
             <ChevronRight className="w-3 h-3" />
@@ -67,9 +99,18 @@ export function ClipCard({ clip, index, isActive, isPlaying, duration, audioBuff
             className="text-white/30 hover:text-white/70 p-0.5">
             <ChevronLeft className="w-3 h-3" />
           </button>
-          <span className="font-mono text-sm text-white bg-white/5 rounded px-2 py-0.5 w-[4.5rem] text-center">
-            {fmt(clip.endTime)}
-          </span>
+          <input
+            type="text"
+            value={editEnd ?? fmt(clip.endTime)}
+            onFocus={(e) => { setEditEnd(fmt(clip.endTime)); e.target.select() }}
+            onChange={(e) => setEditEnd(e.target.value)}
+            onBlur={(e) => commitEnd(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') e.currentTarget.blur()
+              if (e.key === 'Escape') { setEditEnd(null); e.currentTarget.blur() }
+            }}
+            className="font-mono text-sm text-white bg-white/5 rounded px-2 py-0.5 w-[4.5rem] text-center outline-none focus:ring-1 focus:ring-orange-500/50 transition-shadow"
+          />
           <button onClick={() => update({ endTime: Math.min(duration, +(clip.endTime + 0.05).toFixed(2)) })}
             className="text-white/30 hover:text-white/70 p-0.5">
             <ChevronRight className="w-3 h-3" />
