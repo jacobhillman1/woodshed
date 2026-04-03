@@ -26,6 +26,7 @@ export function Waveform({ song, clips, playback, dispatch, wsRef }: Props) {
   const clipsRef = useRef(clips)
   const playbackRef = useRef(playback)
   const addingRef = useRef(false)
+  const clipEndingRef = useRef(false)
 
   useEffect(() => { clipsRef.current = clips }, [clips])
   useEffect(() => { playbackRef.current = playback }, [playback])
@@ -49,18 +50,33 @@ export function Waveform({ song, clips, playback, dispatch, wsRef }: Props) {
 
     ws.on('timeupdate', (currentTime) => {
       dispatch({ type: 'SET_CURRENT_TIME', payload: currentTime })
-    })
-
-    ws.on('finish', () => {
+      // Flag when we reach a clip's end — fires in same timer tick as the auto-pause
       const pb = playbackRef.current
       if (pb.mode === 'clip' && pb.activeClipId) {
         const clip = clipsRef.current.find(c => c.id === pb.activeClipId)
-        if (clip?.isLooping) {
-          setTimeout(() => ws.play(clip.startTime, clip.endTime), 0)
-          return
-        }
+        if (clip && currentTime >= clip.endTime) clipEndingRef.current = true
       }
-      dispatch({ type: 'STOP' })
+    })
+
+    // 'finish' only fires when audio reaches end-of-file (media 'ended' event).
+    // For clip playback, 'pause' fires instead — handled below.
+    ws.on('finish', () => {
+      if (playbackRef.current.mode !== 'clip') dispatch({ type: 'STOP' })
+    })
+
+    // Fires whenever WaveSurfer pauses — both user-initiated and clip-end auto-pause.
+    // clipEndingRef distinguishes the two: it's set by timeupdate in the same timer
+    // tick that triggers the auto-pause, so user pauses leave it false.
+    ws.on('pause', () => {
+      if (!clipEndingRef.current) return
+      clipEndingRef.current = false
+      const pb = playbackRef.current
+      const clip = clipsRef.current.find(c => c.id === pb.activeClipId)
+      if (clip?.isLooping) {
+        setTimeout(() => ws.play(clip.startTime, clip.endTime), 0)
+      } else {
+        dispatch({ type: 'STOP' })
+      }
     })
 
     regions.enableDragSelection({ color: 'rgba(251, 146, 60, 0.25)' })
