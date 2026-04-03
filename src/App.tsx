@@ -56,6 +56,8 @@ export default function App() {
             activeClipId={playback.activeClipId}
             playingClipId={playback.status === 'playing' ? playback.activeClipId : null}
             duration={song.duration}
+            audioBuffer={song.audioBuffer}
+            currentTime={playback.currentTime}
             dispatch={dispatch}
             onPlayClip={toggleClip}
           />

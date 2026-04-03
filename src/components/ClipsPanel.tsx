@@ -8,11 +8,13 @@ interface Props {
   activeClipId: string | null
   playingClipId: string | null
   duration: number
+  audioBuffer: AudioBuffer
+  currentTime: number
   dispatch: Dispatch<Action>
   onPlayClip: (id: string) => void
 }
 
-export function ClipsPanel({ clips, activeClipId, playingClipId, duration, dispatch, onPlayClip }: Props) {
+export function ClipsPanel({ clips, activeClipId, playingClipId, duration, audioBuffer, currentTime, dispatch, onPlayClip }: Props) {
   if (clips.length === 0) {
     return (
       <div className="flex-1 flex items-center justify-center">
@@ -31,6 +33,8 @@ export function ClipsPanel({ clips, activeClipId, playingClipId, duration, dispa
           isActive={activeClipId === clip.id}
           isPlaying={playingClipId === clip.id}
           duration={duration}
+          audioBuffer={audioBuffer}
+          currentTime={currentTime}
           dispatch={dispatch}
           onPlay={() => onPlayClip(clip.id)}
         />

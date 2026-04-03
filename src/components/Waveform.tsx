@@ -31,6 +31,19 @@ export function Waveform({ song, clips, playback, dispatch, wsRef }: Props) {
   useEffect(() => { clipsRef.current = clips }, [clips])
   useEffect(() => { playbackRef.current = playback }, [playback])
 
+  // Freeze the main waveform cursor/progress during clip playback so the
+  // animation lives only on the clip's own mini waveform.
+  const { mode, status } = playback
+  useEffect(() => {
+    const ws = wsRef.current
+    if (!ws) return
+    const isClipPlaying = mode === 'clip' && status === 'playing'
+    ws.setOptions({
+      cursorWidth: isClipPlaying ? 0 : 1,
+      progressColor: isClipPlaying ? '#3f3f46' : '#fb923c',
+    })
+  }, [mode, status, wsRef])
+
   useEffect(() => {
     if (!containerRef.current) return
 
