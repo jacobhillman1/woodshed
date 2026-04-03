@@ -56,7 +56,7 @@ export function Waveform({ song, clips, playback, dispatch, wsRef }: Props) {
       if (pb.mode === 'clip' && pb.activeClipId) {
         const clip = clipsRef.current.find(c => c.id === pb.activeClipId)
         if (clip?.isLooping) {
-          ws.play(clip.startTime, clip.endTime)
+          setTimeout(() => ws.play(clip.startTime, clip.endTime), 0)
           return
         }
       }
