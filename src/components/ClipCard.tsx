@@ -132,37 +132,34 @@ export function ClipCard({ clip, index, isActive, isPlaying, duration, audioBuff
             <RotateCw className="w-3.5 h-3.5" />
           </button>
 
+          {(() => {
+            const speedIndex = Math.max(0, Math.min(3, Math.round((clip.speed - 0.25) / 0.25)))
+            return (
+              <div className="flex flex-col gap-0.5 w-20 flex-shrink-0">
+                <input
+                  type="range"
+                  min={0} max={3} step={1}
+                  value={speedIndex}
+                  onChange={(e) => update({ speed: SPEEDS[+e.target.value] })}
+                  className="w-full accent-orange-500 cursor-pointer"
+                />
+                <div className="flex justify-between">
+                  {SPEED_LABELS.map((label, i) => (
+                    <span key={label} className={`text-[10px] leading-none ${i === speedIndex ? 'text-orange-400' : 'text-white/30'}`}>
+                      {label}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )
+          })()}
+
           <button onClick={() => dispatch({ type: 'DELETE_CLIP', payload: clip.id })}
             className="w-7 h-7 rounded-md bg-white/5 hover:bg-red-500/20 text-white/30 hover:text-red-400 flex items-center justify-center transition-colors">
             <Trash2 className="w-3.5 h-3.5" />
           </button>
         </div>
       </div>
-
-      {/* Speed slider */}
-      {(() => {
-        const speedIndex = Math.max(0, Math.min(3, Math.round((clip.speed - 0.25) / 0.25)))
-        return (
-          <div className="flex flex-col gap-0.5 px-0.5">
-            <input
-              type="range"
-              min={0}
-              max={3}
-              step={1}
-              value={speedIndex}
-              onChange={(e) => update({ speed: SPEEDS[+e.target.value] })}
-              className="w-full accent-orange-500 cursor-pointer"
-            />
-            <div className="flex justify-between">
-              {SPEED_LABELS.map((label, i) => (
-                <span key={label} className={`text-[10px] ${i === speedIndex ? 'text-orange-400' : 'text-white/30'}`}>
-                  {label}
-                </span>
-              ))}
-            </div>
-          </div>
-        )
-      })()}
 
       {/* Mini waveform with current-time overlay */}
       <div className="relative">
