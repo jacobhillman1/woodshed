@@ -118,14 +118,23 @@ export function Waveform({ song, clips, playback, dispatch, wsRef }: Props) {
     }
   }, [song.objectUrl, dispatch, wsRef])
 
+  // Only recompute regions when clip boundaries or selection changes — not on
+  // every UPDATE_CLIP (e.g. speed/name/loop changes), which would cause flicker.
+  const regionKey = (
+    playback.activeClipId
+      ? clips.filter(c => c.id === playback.activeClipId)
+      : clips
+  ).map(c => `${c.id}:${c.startTime}:${c.endTime}`).join(',') + '|' + playback.activeClipId
+
   useEffect(() => {
     const regions = regionsRef.current
     if (!regions) return
     addingRef.current = true
     regions.clearRegions()
-    // When a clip is selected, show only its region; otherwise show all
-    const activeId = playback.activeClipId
-    const visible = activeId ? clips.filter(c => c.id === activeId) : clips
+    const activeId = playbackRef.current.activeClipId
+    const visible = activeId
+      ? clipsRef.current.filter(c => c.id === activeId)
+      : clipsRef.current
     visible.forEach((clip, i) => {
       regions.addRegion({
         id: `clip-${clip.id}`,
@@ -137,7 +146,7 @@ export function Waveform({ song, clips, playback, dispatch, wsRef }: Props) {
       })
     })
     addingRef.current = false
-  }, [clips, playback.activeClipId])
+  }, [regionKey]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="border-t border-white/10 flex-shrink-0">
