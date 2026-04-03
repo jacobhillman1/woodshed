@@ -84,7 +84,7 @@ export function ClipCard({ clip, index, isActive, isPlaying, duration, audioBuff
               if (e.key === 'Enter') e.currentTarget.blur()
               if (e.key === 'Escape') { setEditStart(null); e.currentTarget.blur() }
             }}
-            className="font-mono text-sm text-white bg-white/5 rounded px-2 py-0.5 w-[4.5rem] text-center outline-none focus:ring-1 focus:ring-orange-500/50 transition-shadow"
+            className="font-mono text-sm text-white bg-white/5 rounded px-2 py-0.5 w-20 text-center outline-none focus:ring-1 focus:ring-orange-500/50 transition-shadow"
           />
           <button onClick={() => update({ startTime: Math.min(+(clip.startTime + 0.05).toFixed(2), clip.endTime - 0.05) })}
             className="text-white/30 hover:text-white/70 p-0.5">
@@ -109,7 +109,7 @@ export function ClipCard({ clip, index, isActive, isPlaying, duration, audioBuff
               if (e.key === 'Enter') e.currentTarget.blur()
               if (e.key === 'Escape') { setEditEnd(null); e.currentTarget.blur() }
             }}
-            className="font-mono text-sm text-white bg-white/5 rounded px-2 py-0.5 w-[4.5rem] text-center outline-none focus:ring-1 focus:ring-orange-500/50 transition-shadow"
+            className="font-mono text-sm text-white bg-white/5 rounded px-2 py-0.5 w-20 text-center outline-none focus:ring-1 focus:ring-orange-500/50 transition-shadow"
           />
           <button onClick={() => update({ endTime: Math.min(duration, +(clip.endTime + 0.05).toFixed(2)) })}
             className="text-white/30 hover:text-white/70 p-0.5">
