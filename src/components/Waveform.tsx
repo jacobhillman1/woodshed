@@ -27,6 +27,26 @@ export function Waveform({ song, clips, playback, dispatch, wsRef }: Props) {
   const playbackRef = useRef(playback)
   const clipEndingRef = useRef(false)
 
+  function syncRegions() {
+    const regions = regionsRef.current
+    if (!regions) return
+    regions.clearRegions()
+    const activeId = playbackRef.current.activeClipId
+    const visible = activeId
+      ? clipsRef.current.filter(c => c.id === activeId)
+      : clipsRef.current
+    visible.forEach((clip, i) => {
+      regions.addRegion({
+        id: `clip-${clip.id}`,
+        start: clip.startTime,
+        end: clip.endTime,
+        color: CLIP_COLORS[i % CLIP_COLORS.length],
+        drag: false,
+        resize: false,
+      })
+    })
+  }
+
   useEffect(() => { clipsRef.current = clips }, [clips])
   useEffect(() => { playbackRef.current = playback }, [playback])
 
@@ -59,6 +79,7 @@ export function Waveform({ song, clips, playback, dispatch, wsRef }: Props) {
     })
 
     ws.load(song.objectUrl)
+    ws.on('ready', () => syncRegions())
 
     ws.on('timeupdate', (currentTime) => {
       dispatch({ type: 'SET_CURRENT_TIME', payload: currentTime })
@@ -126,23 +147,7 @@ export function Waveform({ song, clips, playback, dispatch, wsRef }: Props) {
   ).map(c => `${c.id}:${c.startTime}:${c.endTime}`).join(',') + '|' + playback.activeClipId
 
   useEffect(() => {
-    const regions = regionsRef.current
-    if (!regions) return
-    regions.clearRegions()
-    const activeId = playbackRef.current.activeClipId
-    const visible = activeId
-      ? clipsRef.current.filter(c => c.id === activeId)
-      : clipsRef.current
-    visible.forEach((clip, i) => {
-      regions.addRegion({
-        id: `clip-${clip.id}`,
-        start: clip.startTime,
-        end: clip.endTime,
-        color: CLIP_COLORS[i % CLIP_COLORS.length],
-        drag: false,
-        resize: false,
-      })
-    })
+    syncRegions()
   }, [regionKey]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
