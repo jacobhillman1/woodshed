@@ -18,14 +18,16 @@ interface Props {
   playback: PlaybackState
   dispatch: Dispatch<Action>
   wsRef: React.MutableRefObject<WaveSurfer | null>
+  cancelLoopRef: React.MutableRefObject<() => void>
 }
 
-export function Waveform({ song, clips, playback, dispatch, wsRef }: Props) {
+export function Waveform({ song, clips, playback, dispatch, wsRef, cancelLoopRef }: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
   const regionsRef = useRef<RegionsPlugin | null>(null)
   const clipsRef = useRef(clips)
   const playbackRef = useRef(playback)
   const clipEndingRef = useRef(false)
+  const loopTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   function syncRegions() {
     const regions = regionsRef.current
@@ -49,6 +51,15 @@ export function Waveform({ song, clips, playback, dispatch, wsRef }: Props) {
 
   useEffect(() => { clipsRef.current = clips }, [clips])
   useEffect(() => { playbackRef.current = playback }, [playback])
+
+  // Expose a way for usePlayback to cancel pending loop restarts before pausing
+  cancelLoopRef.current = () => {
+    clipEndingRef.current = false
+    if (loopTimerRef.current) {
+      clearTimeout(loopTimerRef.current)
+      loopTimerRef.current = null
+    }
+  }
 
   // Freeze the main waveform cursor/progress during clip playback so the
   // animation lives only on the clip's own mini waveform.
@@ -106,7 +117,10 @@ export function Waveform({ song, clips, playback, dispatch, wsRef }: Props) {
       const pb = playbackRef.current
       const clip = clipsRef.current.find(c => c.id === pb.activeClipId)
       if (clip?.isLooping) {
-        setTimeout(() => ws.play(clip.startTime, clip.endTime), 0)
+        loopTimerRef.current = setTimeout(() => {
+          loopTimerRef.current = null
+          ws.play(clip.startTime, clip.endTime)
+        }, 0)
       } else {
         dispatch({ type: 'STOP' })
       }

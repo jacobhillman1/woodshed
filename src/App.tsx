@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, useCallback } from 'react'
+import { useRef, useState, useEffect, useCallback, MutableRefObject } from 'react'
 import WaveSurfer from 'wavesurfer.js'
 import { useAppState } from './state/AppContext'
 import { useFileUpload } from './hooks/useFileUpload'
@@ -15,6 +15,7 @@ import { loadSession, saveSession } from './lib/persistence'
 export default function App() {
   const { state, dispatch } = useAppState()
   const wsRef = useRef<WaveSurfer | null>(null)
+  const cancelLoopRef = useRef(() => {}) as MutableRefObject<() => void>
   const [error, setError] = useState<string | null>(null)
 
   const onError = useCallback((msg: string) => setError(msg), [])
@@ -55,17 +56,19 @@ export default function App() {
 
   const loadAudio = useAudioLoader(dispatch, onError)
   const { isDragging, handleFile } = useFileUpload(loadAudio, onError)
-  const { toggleSong, toggleClip } = usePlayback(wsRef, state, dispatch)
+  const { toggleSong, toggleClip } = usePlayback(wsRef, state, dispatch, cancelLoopRef)
 
   const selectClip = useCallback((clipId: string) => {
+    cancelLoopRef.current()
     wsRef.current?.pause()
     dispatch({ type: 'SELECT_CLIP', payload: clipId })
-  }, [wsRef, dispatch])
+  }, [wsRef, dispatch, cancelLoopRef])
 
   const deselectClip = useCallback(() => {
+    cancelLoopRef.current()
     wsRef.current?.pause()
     dispatch({ type: 'DESELECT_CLIP' })
-  }, [wsRef, dispatch])
+  }, [wsRef, dispatch, cancelLoopRef])
   useKeyboardShortcuts({ state, dispatch, toggleSong, toggleClip })
 
   // Persist session whenever clips or song changes (debounced)
@@ -113,6 +116,7 @@ export default function App() {
             playback={playback}
             dispatch={dispatch}
             wsRef={wsRef}
+            cancelLoopRef={cancelLoopRef}
           />
           <Transport
             isPlaying={playback.status === 'playing'}

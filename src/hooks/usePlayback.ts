@@ -6,15 +6,17 @@ import { Action } from '@/state/reducer'
 export function usePlayback(
   wsRef: React.MutableRefObject<WaveSurfer | null>,
   state: AppState,
-  dispatch: Dispatch<Action>
+  dispatch: Dispatch<Action>,
+  cancelLoopRef?: React.MutableRefObject<() => void>
 ) {
   const stateRef = useRef(state)
   useEffect(() => { stateRef.current = state }, [state])
 
   const pause = useCallback(() => {
+    cancelLoopRef?.current()
     wsRef.current?.pause()
     dispatch({ type: 'PAUSE' })
-  }, [wsRef, dispatch])
+  }, [wsRef, dispatch, cancelLoopRef])
 
   const playClip = useCallback((clip: Clip) => {
     const ws = wsRef.current
