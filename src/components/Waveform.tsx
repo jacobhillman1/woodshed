@@ -25,7 +25,6 @@ export function Waveform({ song, clips, playback, dispatch, wsRef }: Props) {
   const regionsRef = useRef<RegionsPlugin | null>(null)
   const clipsRef = useRef(clips)
   const playbackRef = useRef(playback)
-  const addingRef = useRef(false)
   const clipEndingRef = useRef(false)
 
   useEffect(() => { clipsRef.current = clips }, [clips])
@@ -95,7 +94,7 @@ export function Waveform({ song, clips, playback, dispatch, wsRef }: Props) {
     regions.enableDragSelection({ color: 'rgba(251, 146, 60, 0.25)' })
 
     regions.on('region-created', (region) => {
-      if (addingRef.current) return
+      if (region.id.startsWith('clip-')) return
       const clip: Clip = {
         id: crypto.randomUUID(),
         name: `Clip ${clipsRef.current.length + 1}`,
@@ -129,7 +128,6 @@ export function Waveform({ song, clips, playback, dispatch, wsRef }: Props) {
   useEffect(() => {
     const regions = regionsRef.current
     if (!regions) return
-    addingRef.current = true
     regions.clearRegions()
     const activeId = playbackRef.current.activeClipId
     const visible = activeId
@@ -145,7 +143,6 @@ export function Waveform({ song, clips, playback, dispatch, wsRef }: Props) {
         resize: false,
       })
     })
-    addingRef.current = false
   }, [regionKey]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
