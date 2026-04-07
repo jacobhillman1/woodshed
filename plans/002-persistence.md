@@ -35,18 +35,18 @@ A single IndexedDB record represents the full session. Only one session exists a
 Tasks are ordered by dependency.
 
 ### Phase 1: Install & Setup
-- [ ] 1.1 — Install `idb` via npm
-- [ ] 1.2 — Create `src/lib/persistence.ts` with `openDB` schema and three exported functions: `saveSession`, `loadSession`, `clearSession`
+- [x] 1.1 — Install `idb` via npm
+- [x] 1.2 — Create `src/lib/persistence.ts` with `openDB` schema and three exported functions: `saveSession`, `loadSession`, `clearSession`
 
 ### Phase 2: Restore on Mount
-- [ ] 2.1 — In `App.tsx`, add `audioFileName` state (`string | null`)
-- [ ] 2.2 — On mount, call `loadSession()` and if a session exists, run the blob through the existing decode path, restore clips, and set `audioFileName`
+- [x] 2.1 — In `App.tsx`, add `audioFileName` state (`string | null`)
+- [x] 2.2 — On mount, call `loadSession()` and if a session exists, run the blob through the existing decode path, restore clips, and set `audioFileName`
 
 ### Phase 3: Save on Upload
-- [ ] 3.1 — In `handleFileSelect`, after successful decode, call `saveSession(file, file.name, clips)`
+- [x] 3.1 — In `handleFileSelect`, after successful decode, call `saveSession(file, file.name, clips)`
 
 ### Phase 4: Save on Clips Change
-- [ ] 4.1 — Add a debounced `useEffect` (500ms) that calls `saveSession` whenever `clips` changes — covers create, rename, nudge, delete, loop toggle, and speed change
+- [x] 4.1 — Add a debounced `useEffect` (500ms) that calls `saveSession` whenever `clips` changes — covers create, rename, nudge, delete, loop toggle, and speed change
 
 ---
 

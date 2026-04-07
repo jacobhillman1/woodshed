@@ -10,6 +10,7 @@ import { TopBar } from './components/TopBar'
 import { Waveform } from './components/Waveform'
 import { ClipsPanel } from './components/ClipsPanel'
 import { Transport } from './components/Transport'
+import { loadSession, saveSession } from './lib/persistence'
 
 export default function App() {
   const { state, dispatch } = useAppState()
@@ -29,6 +30,29 @@ export default function App() {
     return () => { if (url) URL.revokeObjectURL(url) }
   }, [state.song?.objectUrl])
 
+  // Restore persisted session on mount
+  useEffect(() => {
+    loadSession().then(async (session) => {
+      if (!session) return
+      try {
+        const arrayBuffer = await session.audioBlob.arrayBuffer()
+        const audioCtx = new AudioContext()
+        const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer)
+        const objectUrl = URL.createObjectURL(session.audioBlob)
+        const file = new File([session.audioBlob], session.audioFileName, { type: 'audio/mpeg' })
+        dispatch({
+          type: 'RESTORE_SESSION',
+          payload: {
+            song: { file, name: session.audioFileName, duration: audioBuffer.duration, audioBuffer, objectUrl },
+            clips: session.clips,
+          },
+        })
+      } catch {
+        // Silently ignore corrupt session — start fresh
+      }
+    })
+  }, [dispatch])
+
   const loadAudio = useAudioLoader(dispatch, onError)
   const { isDragging, handleFile } = useFileUpload(loadAudio, onError)
   const { toggleSong, toggleClip } = usePlayback(wsRef, state, dispatch)
@@ -43,6 +67,16 @@ export default function App() {
     dispatch({ type: 'DESELECT_CLIP' })
   }, [wsRef, dispatch])
   useKeyboardShortcuts({ state, dispatch, toggleSong, toggleClip })
+
+  // Persist session whenever clips or song changes (debounced)
+  useEffect(() => {
+    const { song, clips } = state
+    if (!song) return
+    const timer = setTimeout(() => {
+      saveSession(song.file, song.name, clips)
+    }, 500)
+    return () => clearTimeout(timer)
+  }, [state.clips, state.song])
 
   const { song, clips, playback } = state
   const activeClip = clips.find(c => c.id === playback.activeClipId)

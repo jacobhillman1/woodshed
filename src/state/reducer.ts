@@ -2,6 +2,7 @@ import { AppState, Clip, Song } from '@/types'
 
 export type Action =
   | { type: 'LOAD_SONG'; payload: Song }
+  | { type: 'RESTORE_SESSION'; payload: { song: Song; clips: Clip[] } }
   | { type: 'UNLOAD_SONG' }
   | { type: 'ADD_CLIP'; payload: Clip }
   | { type: 'UPDATE_CLIP'; payload: { id: string; changes: Partial<Clip> } }
@@ -29,6 +30,9 @@ export function reducer(state: AppState, action: Action): AppState {
   switch (action.type) {
     case 'LOAD_SONG':
       return { ...initialState, song: action.payload }
+
+    case 'RESTORE_SESSION':
+      return { ...initialState, song: action.payload.song, clips: action.payload.clips }
 
     case 'UNLOAD_SONG':
       return { ...initialState }
