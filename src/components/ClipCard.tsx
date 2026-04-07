@@ -1,11 +1,11 @@
 import { Dispatch, useState } from 'react'
 import { ChevronLeft, ChevronRight, Play, Pause, RotateCw, Trash2 } from 'lucide-react'
-
-const SPEEDS = [0.25, 0.5, 0.75, 1.0]
-const SPEED_LABELS = ['0.25x', '0.5x', '0.75x', '1x']
 import { Clip } from '@/types'
 import { Action } from '@/state/reducer'
 import { ClipWaveform } from './ClipWaveform'
+
+const SPEEDS = [0.25, 0.5, 0.75, 1.0]
+const SPEED_LABELS = ['0.25x', '0.5x', '0.75x', '1x']
 
 interface Props {
   clip: Clip
@@ -169,6 +169,10 @@ export function ClipCard({ clip, index, isActive, isPlaying, duration, audioBuff
           endTime={clip.endTime}
           currentTime={currentTime}
           isPlaying={isPlaying}
+          isActive={isActive}
+          onTrimChange={(newStart, newEnd) => {
+            update({ startTime: newStart, endTime: newEnd })
+          }}
         />
         {isPlaying && (
           <span className="absolute bottom-0.5 right-1 text-[10px] font-mono text-orange-300/70 pointer-events-none">
